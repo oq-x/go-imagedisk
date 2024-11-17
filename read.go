@@ -110,8 +110,8 @@ func Decode(r io.Reader) (file File, err error) {
 			case 0: // unavailable
 				continue
 			case 1, 3, 5, 7: // regular sector data
-				sectorDataRecords[i] = make([]byte, sectorSize)
-				if _, err := r.Read(sectorDataRecords[i]); err != nil {
+				sectorDataRecords[sectorNumberingMap[i]] = make([]byte, sectorSize)
+				if _, err := r.Read(sectorDataRecords[sectorNumberingMap[i]]); err != nil {
 					return file, err
 				}
 			case 2, 4, 6, 8: // compressed (all bytes are the same)
@@ -119,8 +119,8 @@ func Decode(r io.Reader) (file File, err error) {
 				if err != nil {
 					return file, err
 				}
-				sectorDataRecords[i] = make([]byte, sectorSize)
-				fill(sectorDataRecords[i], v)
+				sectorDataRecords[sectorNumberingMap[i]] = make([]byte, sectorSize)
+				fill(sectorDataRecords[sectorNumberingMap[i]], v)
 			}
 		}
 
